@@ -56,6 +56,7 @@ function getHtmlFile(outputFile) {
 }
 
 function buildHtml({ markdown, title, subtitle, versionLabel }) {
+  const currentYear = new Date().getFullYear();
   const body = marked(normalizeChecklists(markdown), {
     gfm: true,
     breaks: false,
@@ -185,18 +186,68 @@ function buildHtml({ markdown, title, subtitle, versionLabel }) {
 
     .cover {
       text-align: center;
-      padding-top: 120px;
-      padding-bottom: 160px;
+      padding: 92px 0 120px;
       page-break-after: always;
+    }
+
+    .cover-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 58px 54px 42px;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fff;
+    }
+
+    .cover-label {
+      display: inline-block;
+      margin-bottom: 34px;
+      padding: 6px 12px;
+      border: 1px solid #d8d8d8;
+      border-radius: 999px;
+      color: #555;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .cover h1 {
       font-size: 42px;
+      line-height: 1.12;
       margin-bottom: 16px;
     }
 
-    .cover p {
+    .cover-subtitle {
+      max-width: 600px;
+      margin: 0 auto 24px;
       font-size: 18px;
+      line-height: 1.45;
+      color: #444;
+    }
+
+    .cover-version {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .cover-footer {
+      border-top: 1px solid #e3e3e3;
+      padding-top: 24px;
+    }
+
+    .cover-footer p {
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .cover-year {
+      font-size: 13px;
       color: #555;
     }
 
@@ -208,9 +259,19 @@ function buildHtml({ markdown, title, subtitle, versionLabel }) {
 </head>
 <body>
   <div class="cover">
-    <h1>${title}</h1>
-    <p>${subtitle}</p>
-    <p>${versionLabel}</p>
+    <div class="cover-card">
+      <div>
+        <div class="cover-label">Producto digital</div>
+        <h1>${title}</h1>
+        <p class="cover-subtitle">${subtitle}</p>
+        <p class="cover-version">${versionLabel}</p>
+      </div>
+
+      <div class="cover-footer">
+        <p>Plantillas listas para copiar, adaptar y usar</p>
+        <div class="cover-year">${currentYear}</div>
+      </div>
+    </div>
   </div>
 
   ${body}
