@@ -4,15 +4,11 @@ const { marked } = require("marked");
 const puppeteer = require("puppeteer");
 
 const root = path.resolve(__dirname, "..");
-const inputFile = path.join(root, "producto.md");
 const distDir = path.join(root, "dist");
-const htmlFile = path.join(distDir, "producto.html");
-const pdfFile = path.join(distDir, "chatgpt-para-la-oficina.pdf");
-
-if (!fs.existsSync(inputFile)) {
-  console.error("No se encontró producto.md");
-  process.exit(1);
-}
+const productoFile = path.join(root, "producto.md");
+const leadMagnetFile = path.join(root, "lead-magnet.md");
+const productoPdfFile = path.join(distDir, "chatgpt-para-la-oficina.pdf");
+const leadMagnetPdfFile = path.join(distDir, "chatgpt-para-la-oficina-gratis.pdf");
 
 if (!fs.existsSync(distDir)) {
   fs.mkdirSync(distDir);
@@ -39,26 +35,35 @@ renderer.heading = function ({ tokens, depth }) {
   return `<h${depth} id="${id}">${text}</h${depth}>`;
 };
 
-let markdown = fs.readFileSync(inputFile, "utf8");
+function normalizeChecklists(markdown) {
+  // Corrige checklists escritos como:
+  // [ ] texto
+  // y los transforma en:
+  // - [ ] texto
+  return markdown.replace(/^(\s*)\[ \]\s+/gm, "$1- [ ] ");
+}
 
-// Corrige checklists escritos como:
-// [ ] texto
-// y los transforma en:
-// - [ ] texto
-markdown = markdown.replace(/^(\s*)\[ \]\s+/gm, "$1- [ ] ");
+function getHtmlFile(outputFile) {
+  if (path.basename(outputFile) === "chatgpt-para-la-oficina.pdf") {
+    return path.join(distDir, "producto.html");
+  }
 
-const body = marked(markdown, {
-  gfm: true,
-  breaks: false,
-  renderer,
-});
+  return outputFile.replace(/\.pdf$/i, ".html");
+}
 
-const html = `
+function buildHtml({ markdown, title, subtitle, versionLabel }) {
+  const body = marked(normalizeChecklists(markdown), {
+    gfm: true,
+    breaks: false,
+    renderer,
+  });
+
+  return `
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>ChatGPT para la Oficina</title>
+  <title>${title}</title>
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -194,19 +199,29 @@ const html = `
 </head>
 <body>
   <div class="cover">
-    <h1>ChatGPT para la Oficina</h1>
-    <p>10 plantillas prácticas para ahorrar tiempo en correos, reuniones, documentos y presentaciones</p>
-    <p>Versión MVP</p>
+    <h1>${title}</h1>
+    <p>${subtitle}</p>
+    <p>${versionLabel}</p>
   </div>
 
   ${body}
 </body>
 </html>
 `;
+}
 
-fs.writeFileSync(htmlFile, html, "utf8");
+async function buildPdf({ inputFile, outputFile, title, subtitle, versionLabel }) {
+  const markdown = fs.readFileSync(inputFile, "utf8");
+  const html = buildHtml({
+    markdown,
+    title,
+    subtitle,
+    versionLabel,
+  });
+  const htmlFile = getHtmlFile(outputFile);
 
-async function buildPdf() {
+  fs.writeFileSync(htmlFile, html, "utf8");
+
   const browser = await puppeteer.launch({
     headless: "new",
   });
@@ -218,7 +233,7 @@ async function buildPdf() {
   });
 
   await page.pdf({
-    path: pdfFile,
+    path: outputFile,
     format: "A4",
     printBackground: true,
     margin: {
@@ -235,10 +250,39 @@ async function buildPdf() {
   console.log(htmlFile);
 
   console.log("PDF generado:");
-  console.log(pdfFile);
+  console.log(outputFile);
 }
 
-buildPdf().catch((error) => {
+async function main() {
+  if (!fs.existsSync(productoFile)) {
+    console.error("No se encontró producto.md");
+    process.exit(1);
+  }
+
+  await buildPdf({
+    inputFile: productoFile,
+    outputFile: productoPdfFile,
+    title: "ChatGPT para la Oficina",
+    subtitle:
+      "10 plantillas prácticas para ahorrar tiempo en correos, reuniones, documentos y presentaciones",
+    versionLabel: "Versión MVP",
+  });
+
+  if (!fs.existsSync(leadMagnetFile)) {
+    console.warn("Advertencia: no se encontró lead-magnet.md. Se omitió el PDF gratuito.");
+    return;
+  }
+
+  await buildPdf({
+    inputFile: leadMagnetFile,
+    outputFile: leadMagnetPdfFile,
+    title: "ChatGPT para la Oficina",
+    subtitle: "5 plantillas prácticas para ahorrar tiempo en tareas laborales",
+    versionLabel: "Versión gratuita",
+  });
+}
+
+main().catch((error) => {
   console.error("Error generando PDF:", error);
   process.exit(1);
 });
