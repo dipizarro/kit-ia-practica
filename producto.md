@@ -76,25 +76,25 @@ La IA ayuda, pero el criterio final sigue siendo tuyo.
 
 ## Correos laborales
 
-1. Mejorar un correo mal redactado.
-2. Responder un correo difícil sin sonar agresivo.
-3. Convertir ideas sueltas en un correo claro.
+1. [Mejorar un correo mal redactado](#plantilla-1-mejorar-un-correo-mal-redactado)
+2. [Responder un correo difícil sin sonar agresivo](#plantilla-2-responder-un-correo-dificil-sin-sonar-agresivo)
+3. [Convertir ideas sueltas en un correo claro](#plantilla-3-convertir-ideas-sueltas-en-un-correo-claro)
 
 ## Reuniones y minutas
 
-4. Resumir una reunión desde notas desordenadas.
-5. Extraer compromisos y responsables.
-6. Preparar una reunión importante.
+4. [Resumir una reunión desde notas desordenadas](#plantilla-4-resumir-una-reunion-desde-notas-desordenadas)
+5. [Extraer compromisos y responsables](#plantilla-5-extraer-compromisos-y-responsables)
+6. [Preparar una reunión importante](#plantilla-6-preparar-una-reunion-importante)
 
 ## Documentos y reportes
 
-7. Resumir un documento largo.
-8. Detectar inconsistencias en un documento.
-9. Convertir texto técnico en lenguaje simple.
+7. [Resumir un documento largo](#plantilla-7-resumir-un-documento-largo)
+8. [Detectar inconsistencias en un documento](#plantilla-8-detectar-inconsistencias-en-un-documento)
+9. [Convertir texto técnico en lenguaje simple](#plantilla-9-convertir-texto-tecnico-en-lenguaje-simple)
 
 ## Presentaciones
 
-10. Crear estructura para una presentación.
+10. [Crear estructura para una presentación](#plantilla-10-crear-estructura-para-una-presentacion)
 
 ---
 

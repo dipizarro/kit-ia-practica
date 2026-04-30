@@ -18,8 +18,40 @@ if (!fs.existsSync(distDir)) {
   fs.mkdirSync(distDir);
 }
 
-const markdown = fs.readFileSync(inputFile, "utf8");
-const body = marked(markdown);
+function slugify(text) {
+  return text
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+}
+
+const renderer = new marked.Renderer();
+
+renderer.heading = function ({ tokens, depth }) {
+  const text = this.parser.parseInline(tokens);
+  const plainText = text.replace(/<[^>]+>/g, "");
+  const id = slugify(plainText);
+
+  return `<h${depth} id="${id}">${text}</h${depth}>`;
+};
+
+let markdown = fs.readFileSync(inputFile, "utf8");
+
+// Corrige checklists escritos como:
+// [ ] texto
+// y los transforma en:
+// - [ ] texto
+markdown = markdown.replace(/^(\s*)\[ \]\s+/gm, "$1- [ ] ");
+
+const body = marked(markdown, {
+  gfm: true,
+  breaks: false,
+  renderer,
+});
 
 const html = `
 <!DOCTYPE html>
@@ -67,6 +99,15 @@ const html = `
       margin: 0 0 14px;
     }
 
+    a {
+      color: #111;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     ul, ol {
       margin-top: 8px;
       margin-bottom: 18px;
@@ -74,6 +115,10 @@ const html = `
 
     li {
       margin-bottom: 6px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 8px;
     }
 
     code {
