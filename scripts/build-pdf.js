@@ -31,8 +31,12 @@ renderer.heading = function ({ tokens, depth }) {
   const text = this.parser.parseInline(tokens);
   const plainText = text.replace(/<[^>]+>/g, "");
   const id = slugify(plainText);
+  const className =
+    depth === 1 && /^Plantilla\s+\d+:/.test(plainText.trim())
+      ? ' class="template-title"'
+      : "";
 
-  return `<h${depth} id="${id}">${text}</h${depth}>`;
+  return `<h${depth} id="${id}"${className}>${text}</h${depth}>`;
 };
 
 function normalizeChecklists(markdown) {
@@ -82,6 +86,11 @@ function buildHtml({ markdown, title, subtitle, versionLabel }) {
       margin-bottom: 12px;
       color: #111;
       page-break-after: avoid;
+    }
+
+    h1.template-title {
+      page-break-before: always;
+      break-before: page;
     }
 
     h2 {
