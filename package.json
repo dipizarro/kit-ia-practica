@@ -9,9 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:producto": "node scripts/build-producto.js",
-    "build:lead-magnet": "node scripts/build-lead-magnet.js",
+    "build:lead": "node scripts/build-lead-magnet.js",
     "build:pdf": "node scripts/build-pdf.js",
-    "build": "npm run build:producto && npm run build:pdf"
+    "build": "npm run build:producto && npm run build:lead && npm run build:pdf"
   },
   "repository": {
     "type": "git",
