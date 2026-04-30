@@ -1,0 +1,31 @@
+{
+  "name": "kit-ia-practica",
+  "version": "1.0.0",
+  "description": "Producto digital práctico para enseñar a personas de oficina a usar ChatGPT en tareas laborales comunes.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:producto": "node scripts/build-producto.js",
+    "build:pdf": "node scripts/build-pdf.js",
+    "build": "npm run build:producto && npm run build:pdf"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dipizarro/kit-ia-practica.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dipizarro/kit-ia-practica/issues"
+  },
+  "homepage": "https://github.com/dipizarro/kit-ia-practica#readme",
+  "dependencies": {
+    "marked": "^18.0.2",
+    "puppeteer": "^24.42.0"
+  }
+}
